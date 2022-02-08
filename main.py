@@ -186,7 +186,7 @@ def retornaSucessores(DG, no):
     
     return listaSucessores, listaRegrasTransicao
 
-# obs: pode colocar um if se noDestino < 1 ou > 36
+# BUSCA EM LARGURA
 def buscaLargura(DG, noInicial, noDestino):
     print("BUSCA EM LARGURA:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
     fila = []
@@ -229,6 +229,7 @@ def buscaLargura(DG, noInicial, noDestino):
 
     return False
 
+# BUSCA EM PROFUNDIDADE
 def buscaProfundidade(DG, noInicial, noDestino):
     print("BUSCA EM PROFUNDIDADE:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
     abertos = []
@@ -267,10 +268,28 @@ def buscaProfundidade(DG, noInicial, noDestino):
 
     return False
 
+######### FUNÇÕES EXCLUSIVAS DA PARTE 2 DO TRABALHO #########
+
+# Dado um estado destino, calcula e retorna as heuristicas de cada estado da busca gulosa
+def retornaHeuristica(DG, estadoDestino):
+    estadosOrdenadosHeuristica = [None] * 36
+    heuristica = nx.single_target_shortest_path_length(DG, estadoDestino)
+    for key, value in heuristica:
+        estadosOrdenadosHeuristica[key-1] = value
+    return estadosOrdenadosHeuristica
+
 def buscaOrdenada(DG, noInicial, noDestino):
     pass
 
+# BUSCA GULOSA
 def buscaGulosa(DG, noInicial, noDestino):
+    print("BUSCA EM PROFUNDIDADE:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
+    abertos = []
+    fechados = []
+    tree = Tree()
+    tree.create_node(noInicial, noInicial)
+    abertos.append(noInicial)
+    i = 1
     pass
 
 def buscaAEstrela(DG, noInicial, noDestino):
@@ -278,15 +297,11 @@ def buscaAEstrela(DG, noInicial, noDestino):
 
 NO_INICIAL = 33
 
-buscaLargura(DG, NO_INICIAL, 36)
-buscaProfundidade(DG, NO_INICIAL, 36)
+# buscaLargura(DG, NO_INICIAL, 36)
+# buscaProfundidade(DG, NO_INICIAL, 36)
 
-
-# print(nx.shortest_path(DG, 13, 36))
 # Heuristica para o estado destino 36
-# heuristica = nx.single_target_shortest_path_length(DG, 36)
-# for key, value in heuristica:
-#     print(key, '-->', value)
+retornaHeuristica(DG, 23)
 
 
 
