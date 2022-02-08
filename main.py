@@ -215,7 +215,7 @@ def buscaLargura(DG, noInicial, noDestino):
             filhosDoEstadoAtual = retornaEstadosFilhoValidos(filhosDoEstadoAtual, abertos)
             # Atualiza fila
             fila = filhosDoEstadoAtual
-            # Print da interacao: estado atual, fila de abertos, fila de fechados, iteracao, fila
+            # Print da iteracao: estado atual, fila de abertos, fila de fechados, iteracao, fila
             printIteracao(estadoAtual, abertos, fechados, i, fila)
             # Insere os filhos validos do estado atual na arvore
             insereFilhosNaArvore(tree, filhosDoEstadoAtual, estadoAtual)
@@ -243,17 +243,25 @@ def buscaProfundidade(DG, noInicial, noDestino):
 
         # Sucesso
         if (estadoAtual == noDestino):
-            return estadoAtual, fechados, abertos, len(fechados)
+            printIteracao(estadoAtual, abertos, fechados, i, 0, 1)
+            printCaminhoSolucao(retornaCaminhoSolucao(tree, estadoAtual))
+            tree.show()
+            return estadoAtual, fechados, abertos, len(fechados), tree
         else:
             # Geracao dos filhos do estado atual com tecnica de poda
             filhosDoEstadoAtual, regrasDeTransicaoAplicadas = retornaSucessores(DG, estadoAtual)
             filhosDoEstadoAtual = retornaEstadosFilhoValidos(filhosDoEstadoAtual, fechados)
             filhosDoEstadoAtual = retornaEstadosFilhoValidos(filhosDoEstadoAtual, abertos)
+            # Print da iteracao: estado atual, pilha de abertos, pilha de fechados, iteracao
+            printIteracao(estadoAtual, abertos, fechados, i)
+            # Insere os filhos validos do estado atual na arvore
+            insereFilhosNaArvore(tree, filhosDoEstadoAtual, estadoAtual)
             # Atualiza pilha de abertos com os filhos validos do estado atual
             abertos.extend(filhosDoEstadoAtual)
             # Retira-se o estado atual da pilha de abertos e coloca na pilha de fechados
             abertos.remove(estadoAtual)
             fechados.append(estadoAtual)
+            i += 1
 
     return False
 
@@ -269,7 +277,8 @@ def buscaAEstrela(DG, noInicial, noDestino):
 NO_INICIAL = 33
 
 buscaLargura(DG, NO_INICIAL, 36)
-# print(buscaProfundidade(DG, NO_INICIAL, 20))
+buscaProfundidade(DG, NO_INICIAL, 36)
+
 
 # print(nx.shortest_path(DG, 13, 36))
 # Heuristica para o estado destino 36
