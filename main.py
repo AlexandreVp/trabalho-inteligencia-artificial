@@ -1,7 +1,7 @@
-from re import X
-import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
+import treelib
+from treelib import Node, Tree
 
 # Criacao da classe no representando um estado da torre de londres associado a um custo/heuristica
 class No:
@@ -128,6 +128,7 @@ DG.add_weighted_edges_from([(35, 4, 6)])
 DG.add_weighted_edges_from([(36, 5, 3)])
 DG.add_weighted_edges_from([(36, 4, 5)])
 
+# Funcao para printar cada iteracao das buscas em largura e profundidade
 def printIteracao(estadoAtual, abertos, fechados, iteracao, fila = 0, solucao = 0):
     print("ITERACAO:", iteracao)
     if (solucao == 0):
@@ -138,6 +139,10 @@ def printIteracao(estadoAtual, abertos, fechados, iteracao, fila = 0, solucao = 
         print("Fila:", fila)
     print("Abertos:", abertos)
     print("Fechados:", fechados, "\n")
+
+def insereFilhosNaArvore(tree, filhosDoEstadoAtual, estadoAtual):
+    for estado in filhosDoEstadoAtual:
+        tree.create_node(estado, estado, estadoAtual)
 
 # Funcao que gera como filhos do estado atual apenas estados validos e os retorna
 def retornaEstadosFilhoValidos(filhosDoEstadoAtual, listaDeFechadosAbertos):
@@ -161,8 +166,10 @@ def buscaLargura(DG, noInicial, noDestino):
     fila = []
     abertos = []
     fechados = []
+    tree = Tree()
     abertos.append(noInicial)
     fila.append(noInicial)
+    tree.create_node(noInicial, noInicial)
     i = 1
 
     # Enquanto existir vertices na lista de abertos
@@ -173,7 +180,7 @@ def buscaLargura(DG, noInicial, noDestino):
         # Sucesso
         if (estadoAtual == noDestino):
             printIteracao(estadoAtual, abertos, fechados, i, [], 1)
-            return estadoAtual, fechados, abertos, len(fechados)
+            return estadoAtual, fechados, abertos, len(fechados), tree
         else:
             # Geracao dos filhos do estado atual com tecnica de poda
             filhosDoEstadoAtual, regrasDeTransicaoAplicadas = retornaSucessores(DG, estadoAtual)
@@ -183,6 +190,8 @@ def buscaLargura(DG, noInicial, noDestino):
             fila = filhosDoEstadoAtual
             # Print da interacao: estado atual, fila de abertos, fila de fechados, iteracao, fila
             printIteracao(estadoAtual, abertos, fechados, i, fila)
+            # Insere os filhos validos do estado atual na arvore
+            insereFilhosNaArvore(tree, filhosDoEstadoAtual, estadoAtual)
             # Atualiza fila de abertos com os filhos validos do estado atual
             abertos.extend(filhosDoEstadoAtual)
             # Retira-se estado atual da fila de abertos e coloca na lista de fechados
@@ -229,14 +238,15 @@ def buscaAEstrela(DG, noInicial, noDestino):
 
 NO_INICIAL = 33
 
-print(buscaLargura(DG, NO_INICIAL, 36))
+# tree = buscaLargura(DG, NO_INICIAL, 36)[4]
+# print(tree.paths_to_leaves())
 # print(buscaProfundidade(DG, NO_INICIAL, 20))
 
 # print(nx.shortest_path(DG, 13, 36))
 # Heuristica para o estado destino 36
-# heuristica = nx.single_target_shortest_path_length(DG, 36)
-# for key, value in heuristica:
-#     print(key, '-->', value)
+heuristica = nx.single_target_shortest_path_length(DG, 36)
+for key, value in heuristica:
+    print(key, '-->', value)
 
 
 
