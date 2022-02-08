@@ -128,6 +128,17 @@ DG.add_weighted_edges_from([(35, 4, 6)])
 DG.add_weighted_edges_from([(36, 5, 3)])
 DG.add_weighted_edges_from([(36, 4, 5)])
 
+def printIteracao(estadoAtual, abertos, fechados, iteracao, fila = 0, solucao = 0):
+    print("ITERACAO:", iteracao)
+    if (solucao == 0):
+        print("Estado Atual:", estadoAtual)
+    else:
+        print("Estado Atual:", estadoAtual, "(Estado Objetivo e fim da busca)")
+    if (fila != 0):
+        print("Fila:", fila)
+    print("Abertos:", abertos)
+    print("Fechados:", fechados, "\n")
+
 # Funcao que gera como filhos do estado atual apenas estados validos e os retorna
 def retornaEstadosFilhoValidos(filhosDoEstadoAtual, listaDeFechadosAbertos):
     for estado in listaDeFechadosAbertos:
@@ -152,6 +163,7 @@ def buscaLargura(DG, noInicial, noDestino):
     fechados = []
     abertos.append(noInicial)
     fila.append(noInicial)
+    i = 1
 
     # Enquanto existir vertices na lista de abertos
     while(len(abertos) != 0):
@@ -160,6 +172,7 @@ def buscaLargura(DG, noInicial, noDestino):
 
         # Sucesso
         if (estadoAtual == noDestino):
+            printIteracao(estadoAtual, abertos, fechados, i, [], 1)
             return estadoAtual, fechados, abertos, len(fechados)
         else:
             # Geracao dos filhos do estado atual com tecnica de poda
@@ -168,20 +181,21 @@ def buscaLargura(DG, noInicial, noDestino):
             filhosDoEstadoAtual = retornaEstadosFilhoValidos(filhosDoEstadoAtual, abertos)
             # Atualiza fila
             fila = filhosDoEstadoAtual
+            # Print da interacao: estado atual, fila de abertos, fila de fechados, iteracao, fila
+            printIteracao(estadoAtual, abertos, fechados, i, fila)
             # Atualiza fila de abertos com os filhos validos do estado atual
             abertos.extend(filhosDoEstadoAtual)
             # Retira-se estado atual da fila de abertos e coloca na lista de fechados
             abertos.remove(estadoAtual)
             fechados.append(estadoAtual)
+            i += 1
 
     return False
 
 def buscaProfundidade(DG, noInicial, noDestino):
-    fila = []
     abertos = []
     fechados = []
     abertos.append(noInicial)
-    fila.append(noInicial)
 
     # Enquanto existir vertices na pilha de abertos
     while(len(abertos) != 0):
@@ -215,14 +229,14 @@ def buscaAEstrela(DG, noInicial, noDestino):
 
 NO_INICIAL = 33
 
-# print(buscaLargura(DG, NO_INICIAL, 20))
+print(buscaLargura(DG, NO_INICIAL, 36))
 # print(buscaProfundidade(DG, NO_INICIAL, 20))
 
-print(nx.shortest_path(DG, 13, 36))
+# print(nx.shortest_path(DG, 13, 36))
 # Heuristica para o estado destino 36
-heuristica = nx.single_target_shortest_path_length(DG, 36)
-for key, value in heuristica:
-    print(key, '-->', value)
+# heuristica = nx.single_target_shortest_path_length(DG, 36)
+# for key, value in heuristica:
+#     print(key, '-->', value)
 
 
 
