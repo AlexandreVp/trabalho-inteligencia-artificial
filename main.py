@@ -288,6 +288,10 @@ def retornaListaDeNos(estados, custosOuHeuristicas):
     listaNos.sort(key = lambda x: x.custo)
     return listaNos
 
+# Ordena lista de Nos com base no custo / heuristica
+def ordenaListaDeNos(listaNos):
+    listaNos.sort(key = lambda x: x.custo)
+
 # Funcao para printar uma lista de nos da forma: Estado(custo) ou Estado(heuristica)
 def printListaNos(listaNos):
     print("[", end="")
@@ -298,22 +302,79 @@ def printListaNos(listaNos):
             print("{}({}), ".format(no.no, no.custo), end="")
     print("]")
 
+# Print das iteracoes nas buscas em que se usa a Classe No (listas compostas pela Classe No representando cada estado)
+def printIteracaoComListaDeNos(estadoAtual, abertos, fechados, iteracao, fila = 0, solucao = 0):
+    print("ITERACAO:", iteracao)
+    if (solucao == 0):
+        print("Estado Atual:", estadoAtual)
+    else:
+        print("Estado Atual:", estadoAtual, "(Estado Objetivo e fim da busca)")
+    if (fila != 0):
+        print("Fila:", end="")
+        printListaNos(fila)
+    print("Abertos:", end="")
+    printListaNos(abertos)
+    print("Fechados:", end="")
+    printListaNos(fechados)
+    print('')
+
+# Funcao que gera como filhos do estado atual apenas estados validos e os retorna
+def retornaEstadosFilhoValidosComListaDeNos(filhosDoEstadoAtual, listaDeNosFechadosAbertos):
+    for estado in listaDeNosFechadosAbertos:
+        if estado.no in filhosDoEstadoAtual:
+            filhosDoEstadoAtual.remove(estado.no)
+
+    return filhosDoEstadoAtual
+
 # BUSCA ORDENADA
 def buscaOrdenada(DG, noInicial, noDestino):
     pass
 
 # BUSCA GULOSA
-def buscaGulosa(DG, noInicial, noDestino):
+def buscaGulosa(DG, noInicial, noDestino, heuristicas):
     print("BUSCA GULOSA:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
-    fila = []
     abertos = []
-    fechados = []
     tree = Tree()
     tree.create_node(noInicial, noInicial)
     abertos.append(noInicial)
-    fila.append(noInicial)
+    # Criando listas de nos: abertos, fechados, fila
+    nosAbertos = retornaListaDeNos(abertos, heuristicas)
+    nosFechados = []
+    nosFila = nosAbertos
     i = 1
-    # restante da busca gulosa ainda a ser implementado
+
+    # Enquanto existir vertices na lista de abertos
+    while(len(nosAbertos) != 0):
+        # Primeiro da fila de abertos como estado atual
+        noAtual = nosAbertos[0]
+
+        # Sucesso
+        if (noAtual.no == noDestino):
+            printIteracaoComListaDeNos(noAtual.no, nosAbertos, nosFechados, i, [], 1)
+            printCaminhoSolucao(retornaCaminhoSolucao(tree, noAtual.no))
+            tree.show()
+            return noAtual.no, nosFechados, nosAbertos, len(nosFechados), tree
+        else:
+            # Geracao dos filhos do estado atual com tecnica de poda
+            filhosDoEstadoAtual, regrasDeTransicaoAplicadas = retornaSucessores(DG, noAtual.no)
+            filhosDoEstadoAtual = retornaEstadosFilhoValidosComListaDeNos(filhosDoEstadoAtual, nosFechados)
+            filhosDoEstadoAtual = retornaEstadosFilhoValidosComListaDeNos(filhosDoEstadoAtual, nosAbertos)
+            nosFilhosDoEstadoAtual = retornaListaDeNos(filhosDoEstadoAtual, heuristicas)
+            # Atualiza fila
+            nosFila = nosFilhosDoEstadoAtual
+            # Print da iteracao: estado atual, fila de abertos, fila de fechados, iteracao, fila
+            printIteracaoComListaDeNos(noAtual.no, nosAbertos, nosFechados, i, nosFila)
+            # Insere os filhos validos do estado atual na arvore
+            insereFilhosNaArvore(tree, filhosDoEstadoAtual, noAtual.no)
+            # Retira-se estado atual da fila de abertos e coloca na lista de fechados
+            nosAbertos.pop(0)
+            nosFechados.append(noAtual)
+            # Atualiza fila de abertos com os filhos validos do estado atual
+            nosAbertos.extend(nosFilhosDoEstadoAtual)
+            ordenaListaDeNos(nosAbertos)
+            i += 1
+
+    return False
 
 def buscaAEstrela(DG, noInicial, noDestino):
     pass
@@ -321,15 +382,14 @@ def buscaAEstrela(DG, noInicial, noDestino):
 NO_INICIAL = 33
 
 # BUSCA LARGURA
-# buscaLargura(DG, NO_INICIAL, 36)
+# buscaLargura(DG, NO_INICIAL, 14)
 
 # BUSCA PROFUNDIDADE
-# buscaProfundidade(DG, NO_INICIAL, 36)
+# buscaProfundidade(DG, NO_INICIAL, 14)
 
 # BUSCA GULOSA
-heuristicas = retornaHeuristica(DG, 23)
-listaNos = retornaListaDeNos([1, 30, 20, 12, 14], heuristicas)
-printListaNos(listaNos)
+heuristicas = retornaHeuristica(DG, 24)
+buscaGulosa(DG, NO_INICIAL, 24, heuristicas)
 
 
 
