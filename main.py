@@ -4,9 +4,9 @@ from treelib import Node, Tree
 
 # Criacao da classe no representando um estado da torre de londres associado a um custo/heuristica
 class No:
-  def __init__(self, no, custo):
-    self.no = no
-    self.custo = custo
+    def __init__(self, no, custo):
+        self.no = no
+        self.custo = custo
 
 # Criacao de um grafo direcionado
 DG = nx.DiGraph()
@@ -278,30 +278,58 @@ def retornaHeuristica(DG, estadoDestino):
         estadosOrdenadosHeuristica[key-1] = value
     return estadosOrdenadosHeuristica
 
+# Funcao que recebe uma lista de estados e seus custos ou heuristicas
+# E cria-se uma lista de classes No para cada estado de forma ordenada
+def retornaListaDeNos(estados, custosOuHeuristicas):
+    listaNos = []
+    for estado in estados:
+        novoNo = No(estado, custosOuHeuristicas[estado-1])
+        listaNos.append(novoNo)
+    listaNos.sort(key = lambda x: x.custo)
+    return listaNos
+
+# Funcao para printar uma lista de nos da forma: Estado(custo) ou Estado(heuristica)
+def printListaNos(listaNos):
+    print("[", end="")
+    for no in listaNos:
+        if (no == listaNos[len(listaNos)-1]):
+            print("{}({})".format(no.no, no.custo), end="")
+        else:
+            print("{}({}), ".format(no.no, no.custo), end="")
+    print("]")
+
+# BUSCA ORDENADA
 def buscaOrdenada(DG, noInicial, noDestino):
     pass
 
 # BUSCA GULOSA
 def buscaGulosa(DG, noInicial, noDestino):
-    print("BUSCA EM PROFUNDIDADE:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
+    print("BUSCA GULOSA:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
+    fila = []
     abertos = []
     fechados = []
     tree = Tree()
     tree.create_node(noInicial, noInicial)
     abertos.append(noInicial)
+    fila.append(noInicial)
     i = 1
-    pass
+    # restante da busca gulosa ainda a ser implementado
 
 def buscaAEstrela(DG, noInicial, noDestino):
     pass
 
 NO_INICIAL = 33
 
+# BUSCA LARGURA
 # buscaLargura(DG, NO_INICIAL, 36)
+
+# BUSCA PROFUNDIDADE
 # buscaProfundidade(DG, NO_INICIAL, 36)
 
-# Heuristica para o estado destino 36
-retornaHeuristica(DG, 23)
+# BUSCA GULOSA
+heuristicas = retornaHeuristica(DG, 23)
+listaNos = retornaListaDeNos([1, 30, 20, 12, 14], heuristicas)
+printListaNos(listaNos)
 
 
 
