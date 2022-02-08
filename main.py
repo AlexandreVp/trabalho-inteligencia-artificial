@@ -188,6 +188,7 @@ def retornaSucessores(DG, no):
 
 # obs: pode colocar um if se noDestino < 1 ou > 36
 def buscaLargura(DG, noInicial, noDestino):
+    print("BUSCA EM LARGURA:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
     fila = []
     abertos = []
     fechados = []
@@ -229,6 +230,7 @@ def buscaLargura(DG, noInicial, noDestino):
     return False
 
 def buscaProfundidade(DG, noInicial, noDestino):
+    print("BUSCA EM PROFUNDIDADE:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
     abertos = []
     fechados = []
     tree = Tree()
