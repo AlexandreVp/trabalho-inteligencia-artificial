@@ -1,6 +1,5 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import treelib
 from treelib import Node, Tree
 
 # Criacao da classe no representando um estado da torre de londres associado a um custo/heuristica
@@ -140,6 +139,32 @@ def printIteracao(estadoAtual, abertos, fechados, iteracao, fila = 0, solucao = 
     print("Abertos:", abertos)
     print("Fechados:", fechados, "\n")
 
+# Funcao para printar o caminho solucao
+def printCaminhoSolucao(caminhoSolucao):
+    # Print dos estados
+    print("Caminho Solucao:", end=" ")
+    for estado in caminhoSolucao:
+        if (estado == caminhoSolucao[len(caminhoSolucao)-1]):
+            print(estado, "\n")
+        else:
+            print(estado, end=" -> ")
+
+# Funcao que retorna o caminho solucao (raiz -> ... -> folha) dado a arvore de busca e o estado destino
+def retornaCaminhoSolucao(tree, estadoDestino):
+    indexDoCaminho = None
+    # Retorna uma lista contendo listas dos caminhos da arvore para cada no folha
+    caminhos = tree.paths_to_leaves()
+    # Passa por cada lista de caminhos e descobre o index da lista com o caminho solucao
+    for index in range(len(caminhos)):
+        caminho = caminhos[index]
+        if (caminho[len(caminho)-1] == estadoDestino):
+            indexDoCaminho = index
+    # Atribuicao do caminho solucao
+    caminhoSolucao = caminhos[indexDoCaminho]
+    
+    return caminhoSolucao
+
+# Funcao que insere na arvore os filhos validos do estado atual da busca
 def insereFilhosNaArvore(tree, filhosDoEstadoAtual, estadoAtual):
     for estado in filhosDoEstadoAtual:
         tree.create_node(estado, estado, estadoAtual)
@@ -167,9 +192,9 @@ def buscaLargura(DG, noInicial, noDestino):
     abertos = []
     fechados = []
     tree = Tree()
+    tree.create_node(noInicial, noInicial)
     abertos.append(noInicial)
     fila.append(noInicial)
-    tree.create_node(noInicial, noInicial)
     i = 1
 
     # Enquanto existir vertices na lista de abertos
@@ -180,6 +205,8 @@ def buscaLargura(DG, noInicial, noDestino):
         # Sucesso
         if (estadoAtual == noDestino):
             printIteracao(estadoAtual, abertos, fechados, i, [], 1)
+            printCaminhoSolucao(retornaCaminhoSolucao(tree, estadoAtual))
+            tree.show()
             return estadoAtual, fechados, abertos, len(fechados), tree
         else:
             # Geracao dos filhos do estado atual com tecnica de poda
@@ -204,7 +231,10 @@ def buscaLargura(DG, noInicial, noDestino):
 def buscaProfundidade(DG, noInicial, noDestino):
     abertos = []
     fechados = []
+    tree = Tree()
+    tree.create_node(noInicial, noInicial)
     abertos.append(noInicial)
+    i = 1
 
     # Enquanto existir vertices na pilha de abertos
     while(len(abertos) != 0):
@@ -238,15 +268,14 @@ def buscaAEstrela(DG, noInicial, noDestino):
 
 NO_INICIAL = 33
 
-# tree = buscaLargura(DG, NO_INICIAL, 36)[4]
-# print(tree.paths_to_leaves())
+buscaLargura(DG, NO_INICIAL, 36)
 # print(buscaProfundidade(DG, NO_INICIAL, 20))
 
 # print(nx.shortest_path(DG, 13, 36))
 # Heuristica para o estado destino 36
-heuristica = nx.single_target_shortest_path_length(DG, 36)
-for key, value in heuristica:
-    print(key, '-->', value)
+# heuristica = nx.single_target_shortest_path_length(DG, 36)
+# for key, value in heuristica:
+#     print(key, '-->', value)
 
 
 
