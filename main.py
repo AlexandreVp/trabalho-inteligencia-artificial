@@ -358,6 +358,29 @@ def retornaCaminhoSolucaoDeNos(tree, noEstadoDestino):
     
     return caminhoSolucao
 
+# Funcao que retorna o custo de um caminho na arvore da raiz ao estado enviado por parâmetro
+def retornaCustoDoCaminhoDeNos(tree, no, custos):
+    indexDoCaminho = None
+    # Retorna uma lista contendo listas dos caminhos da arvore para cada no folha
+    caminhos = tree.paths_to_leaves()
+    # Passa por cada lista de caminhos e descobre o index da lista com o caminho da raiz ateh o no
+    for index in range(len(caminhos)):
+        caminho = caminhos[index]
+        if (caminho[len(caminho)-1] == "{}({})".format(no.no, no.custo)):
+            indexDoCaminho = index
+    # Atribuicao do caminho solucao
+    caminhoNoEmString = caminhos[indexDoCaminho]
+    caminhoNoInteiros = []
+    for no in caminhoNoEmString:
+        a = no.split('(')
+        caminhoNoInteiros.append(int(a[0]))
+
+    custoDoCaminho = 0
+    for no in caminhoNoInteiros:
+        custoDoCaminho += custos[no-1]
+
+    return custoDoCaminho
+
 # BUSCA ORDENADA
 def buscaOrdenada(DG, noInicial, noDestino, custos):
     print("BUSCA ORDENADA:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
@@ -482,7 +505,8 @@ def buscaAEstrela(DG, noInicial, noDestino, custosHeuristicas, custos):
             nosFilhosDoEstadoAtual = retornaListaDeNos(filhosDoEstadoAtual, custosHeuristicas)
             # Atualiza fila
             nosFila = nosFilhosDoEstadoAtual
-            atualizaCustosDosFilhos(nosFila, custos[noAtual.no-1])
+            custoDoCaminho = retornaCustoDoCaminhoDeNos(tree, noAtual, custos)
+            atualizaCustosDosFilhos(nosFila, custoDoCaminho)
             tecnicaDePodaComRelacaoAoCustoDosFilhos(nosFila, nosAbertos)
             # Print da iteracao: estado atual, fila de abertos, fila de fechados, iteracao, fila
             printIteracaoComListaDeNos(noAtual.no, nosAbertos, nosFechados, i, nosFila)
@@ -515,11 +539,11 @@ NO_INICIAL = 33
 # buscaGulosa(DG, NO_INICIAL, 24, heuristicas)
 
 # BUSCA A*
-# custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 3, 3, 1, 1, 6, 4, 3, 2, 2, 3, 6, 4, 0, 3, 2, 4]
-# heuristicas = retornaHeuristica(DG, 24)
-# custosHeuristicasZip = zip(custos, heuristicas)
-# custosHeuristicas = [x + y for (x, y) in custosHeuristicasZip]
-# buscaAEstrela(DG, NO_INICIAL, 24, custosHeuristicas, custos)
+custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 3, 3, 1, 1, 6, 4, 3, 2, 2, 3, 6, 4, 0, 3, 2, 4]
+heuristicas = retornaHeuristica(DG, 24)
+custosHeuristicasZip = zip(custos, heuristicas)
+custosHeuristicas = [x + y for (x, y) in custosHeuristicasZip]
+buscaAEstrela(DG, NO_INICIAL, 24, custosHeuristicas, custos)
 
 
 
