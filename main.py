@@ -338,7 +338,7 @@ def tecnicaDePodaComRelacaoAoCustoDosFilhos(nosFila, listaDeNosAbertos):
             if noEstado.no == noFila.no and noFila.custo >= noEstado.custo:
                 nosFila.remove(noFila)
 
-# Funcao que insere na arvore os nos de filhos validos do estado atual da busca
+# Funcao que insere na arvore os nos de filhos validos do estado atual da busca informando tambem seus custos
 def insereNosFilhosNaArvore(tree, nosFila, estadoAtual):
     for estado in nosFila:
         tree.create_node("{}({})".format(estado.no, estado.custo), "{}({})".format(estado.no, estado.custo), "{}({})".format(estadoAtual.no, estadoAtual.custo))
@@ -364,7 +364,6 @@ def buscaOrdenada(DG, noInicial, noDestino, custos):
     abertos = []
     tree = Tree()
     tree.create_node("{}({})".format(noInicial, 0), "{}({})".format(noInicial, 0))
-    # tree.create_node(noInicial, noInicial)
     abertos.append(noInicial)
     # Criando listas de nos: abertos, fechados, fila
     nosAbertos = retornaListaDeNos(abertos, custos)
