@@ -543,12 +543,6 @@ def buscaAEstrela(DG, noInicial, noDestino, custosHeuristicas, custos):
 
 NO_INICIAL = 33
 
-# BUSCA LARGURA
-buscaLargura(DG, NO_INICIAL, 14)
-
-# BUSCA PROFUNDIDADE
-buscaProfundidade(DG, NO_INICIAL, 14)
-
 # BUSCA ORDENADA
 custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 4, 3, 4, 4, 1, 2, 3, 2, 4, 5, 3, 3, 3, 1, 3, 6, 4, 4, 4, 3, 4, 5, 3, 0, 3, 2, 3]
 buscaOrdenada(DG, NO_INICIAL, 14, custos)
@@ -584,10 +578,14 @@ menu_trabalho_2 = {
 }
 
 def chamaBuscaLargura():
-    pass
+    # BUSCA LARGURA
+    estadoDestino = int(input("Digite um estado destino: "))
+    buscaLargura(DG, NO_INICIAL, estadoDestino)
 
 def chamaBuscaProfundidade():
-    pass
+    # BUSCA PROFUNDIDADE
+    estadoDestino = int(input("Digite um estado destino: "))
+    buscaProfundidade(DG, NO_INICIAL, estadoDestino)
 
 def chamaBuscaOrdenada():
     pass
