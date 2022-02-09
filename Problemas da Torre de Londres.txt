@@ -1,0 +1,66 @@
+Peso dos custos:
+se há casa vazia das que tem que preencher: +1
+se há casa que tem que preencher com peça errada: +1
+independente da casa se tiver peças em cima terá que somar +1 para cada peça em cima
+
+Problema 1 -> Estado Destino 36
+Array de custos para cada estado
+[6, 4, 3, 2, 1, 3, 6, 4, 4, 4, 3, 4, 6, 4, 4, 4, 2, 3, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 0, 3, 2, 1]
+
+Problema 2 -> Estado Destino 29
+Array de custos para cada estado
+[6, 3, 4, 4, 2, 3, 6, 4, 4, 4, 2, 3, 6, 4, 4, 4, 3, 4, 6, 4, 3, 3, 2, 3, 5, 3, 2, 2, 0, 2, 5, 2, 0, 4, 3, 4]
+
+Problema 3 -> Estado Destino 27
+Array de custos para cada estado
+[6, 4, 4, 4, 2, 3, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 6, 4, 3, 3, 2, 3, 4, 2, 1, 2, 1, 3, 5, 3, 0, 4, 3, 4]
+
+Problema 4 -> Estado Destino 3
+Array de custos para cada estado
+[4, 2, 1, 2, 2, 3, 5, 3, 3, 3, 2, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 6, 4, 0, 3, 1, 3]
+
+Problema 5 -> Estado Destino 3
+Array de custos para cada estado
+[4, 2, 1, 2, 2, 3, 5, 3, 3, 3, 2, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 6, 4, 0, 3, 1, 3]
+
+Problema 6 -> Estado Destino 22
+Array de custos para cada estado
+[6, 4, 4, 3, 3, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 3, 2, 4, 5, 3, 2, 1, 1, 3, 6, 4, 3, 3, 2, 2, 6, 4, 0, 4, 3, 3]
+
+Problema 7 -> Estado Destino 8
+Array de custos para cada estado
+[5, 3, 3, 3, 3, 4, 4, 1, 2, 3, 2, 4, 6, 3, 4, 4, 3, 4, 6, 4, 4, 4, 2, 3, 5, 3, 3, 4, 3, 4, 6, 4, 0, 3, 1, 4]
+
+Problema 8 -> Estado Destino 24
+Array de custos para cada estado
+[6, 4, 4, 4, 3, 4, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 3, 3, 1, 1, 6, 4, 3, 2, 2, 3, 6, 4, 0, 3, 2, 4]
+
+Problema 9 -> Estado Destino 1
+Array de custos para cada estado
+[3, 2, 2, 3, 3, 4, 5, 3, 3, 3, 2, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 5, 4, 0, 4, 2, 4]
+
+Problema 10 -> Estado Destino 7
+Array de custos para cada estado
+[5, 3, 3, 3, 3, 4, 3, 2, 2, 3, 2, 3, 5, 4, 4, 4, 3, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 0, 4, 2, 4]
+
+Problema 11 -> Estado Destino 21
+Array de custos para cada estado
+[5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 3, 2, 3, 4, 2, 1, 2, 1, 3, 6, 4, 3, 3, 2, 3, 6, 4, 0, 4, 3, 4]
+
+Problema 12 -> Estado Destino 23
+Array de custos para cada estado
+[6, 4, 4, 4, 3, 4, 6, 3, 4, 4, 3, 4, 5, 2, 3, 3, 2, 4, 5, 3, 2, 2, 0, 2, 6, 4, 3, 3, 2, 3, 6, 4, 0, 3, 2, 4]
+
+Problema 13 -> Estado Destino 26
+Array de custos para cada estado
+[6, 4, 4, 4, 1, 3, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 2, 3, 6, 3, 4, 4, 3, 4, 4, 1, 2, 3, 2, 4, 5, 3, 0, 4, 3, 3]
+
+Problema 14 -> Estado Destino 9
+Array de custos para cada estado
+[5, 3, 3, 3, 3, 4, 4, 2, 1, 2, 1, 3, 6, 4, 3, 3, 2, 3, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 0, 4, 2, 4]
+
+Problema 15 -> Estado Destino 14
+Array de custos para cada estado
+[6, 4, 4, 4, 3, 4, 6, 3, 4, 4, 3, 4, 4, 1, 2, 3, 2, 4, 5, 3, 3, 3, 1, 3, 6, 4, 4, 4, 3, 4, 5, 3, 0, 3, 2, 3]
+
+
