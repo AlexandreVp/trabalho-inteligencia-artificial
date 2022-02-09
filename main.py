@@ -268,7 +268,7 @@ def buscaProfundidade(DG, noInicial, noDestino):
 
     return False
 
-######### FUNÇÕES EXCLUSIVAS DA PARTE 2 DO TRABALHO #########
+################## FUNÇÕES EXCLUSIVAS DA PARTE 2 DO TRABALHO ##################
 
 # Dado um estado destino, calcula e retorna as heuristicas de cada estado da busca gulosa
 def retornaHeuristica(DG, estadoDestino):
@@ -451,8 +451,52 @@ def buscaGulosa(DG, noInicial, noDestino, heuristicas):
 
     return False
 
-def buscaAEstrela(DG, noInicial, noDestino):
-    pass
+def buscaAEstrela(DG, noInicial, noDestino, custosHeuristicas, custos):
+    print("BUSCA A*:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
+    abertos = []
+    tree = Tree()
+    tree.create_node("{}({})".format(noInicial, custosHeuristicas[noInicial-1]), "{}({})".format(noInicial, custosHeuristicas[noInicial-1]))
+    abertos.append(noInicial)
+    # Criando listas de nos: abertos, fechados, fila
+    nosAbertos = retornaListaDeNos(abertos, custosHeuristicas)
+    nosFechados = []
+    nosFila = nosAbertos
+    i = 1
+
+    # Enquanto existir vertices na lista de abertos
+    while(len(nosAbertos) != 0):
+        # Primeiro da fila de abertos como estado atual
+        noAtual = nosAbertos[0]
+
+        # Sucesso
+        if (noAtual.no == noDestino):
+            printIteracaoComListaDeNos(noAtual.no, nosAbertos, nosFechados, i, [], 1)
+            # criar funcao print fim depois e tirar o noatual da abertos e colocar na fechados
+            tree.show()
+            printCaminhoSolucao(retornaCaminhoSolucaoDeNos(tree, noAtual))
+            return noAtual.no, nosFechados, nosAbertos, len(nosFechados), tree
+        else:
+            # Geracao dos filhos do estado atual
+            filhosDoEstadoAtual, regrasDeTransicaoAplicadas = retornaSucessores(DG, noAtual.no)
+            filhosDoEstadoAtual = retornaEstadosFilhoValidosComListaDeNos(filhosDoEstadoAtual, nosFechados)
+            nosFilhosDoEstadoAtual = retornaListaDeNos(filhosDoEstadoAtual, custosHeuristicas)
+            # Atualiza fila
+            nosFila = nosFilhosDoEstadoAtual
+            atualizaCustosDosFilhos(nosFila, custos[noAtual.no-1])
+            tecnicaDePodaComRelacaoAoCustoDosFilhos(nosFila, nosAbertos)
+            # Print da iteracao: estado atual, fila de abertos, fila de fechados, iteracao, fila
+            printIteracaoComListaDeNos(noAtual.no, nosAbertos, nosFechados, i, nosFila)
+            # Insere os filhos validos do estado atual na arvore
+            insereNosFilhosNaArvore(tree, nosFila, noAtual)
+            # Retira-se estado atual da fila de abertos e coloca na lista de fechados
+            nosAbertos.pop(0)
+            nosFechados.append(noAtual)
+            # Atualiza fila de abertos com os filhos validos do estado atual
+            nosAbertos.extend(nosFila)
+            ordenaListaDeNos(nosAbertos)
+            i += 1
+
+    return False
 
 NO_INICIAL = 33
 
@@ -462,13 +506,20 @@ NO_INICIAL = 33
 # BUSCA PROFUNDIDADE
 # buscaProfundidade(DG, NO_INICIAL, 14)
 
+# BUSCA ORDENADA
+# custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 3, 3, 1, 1, 6, 4, 3, 2, 2, 3, 6, 4, 0, 3, 2, 4]
+# buscaOrdenada(DG, NO_INICIAL, 24, custos)
+
 # BUSCA GULOSA
 # heuristicas = retornaHeuristica(DG, 24)
 # buscaGulosa(DG, NO_INICIAL, 24, heuristicas)
 
-# BUSCA ORDENADA
-custos = [6, 4, 3, 2, 1, 3, 6, 4, 4, 4, 3, 4, 6, 4, 4, 4, 2, 3, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 0, 3, 2, 1]
-buscaOrdenada(DG, NO_INICIAL, 36, custos)
+# BUSCA A*
+# custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 3, 3, 1, 1, 6, 4, 3, 2, 2, 3, 6, 4, 0, 3, 2, 4]
+# heuristicas = retornaHeuristica(DG, 24)
+# custosHeuristicasZip = zip(custos, heuristicas)
+# custosHeuristicas = [x + y for (x, y) in custosHeuristicasZip]
+# buscaAEstrela(DG, NO_INICIAL, 24, custosHeuristicas, custos)
 
 
 
