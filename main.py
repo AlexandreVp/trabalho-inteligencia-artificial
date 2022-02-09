@@ -564,15 +564,102 @@ custosHeuristicasZip = zip(custos, heuristicas)
 custosHeuristicas = [x + y for (x, y) in custosHeuristicasZip]
 buscaAEstrela(DG, NO_INICIAL, 14, custosHeuristicas, custos)
 
+menu_opcoes = {
+    1: 'Trabalho 1: Busca em Largura / Busca em Profundidade',
+    2: 'Trabalho 2: Busca Ordenada / Busca Gulosa / Busca A*',
+    3: 'Sair do Programa'
+}
 
+menu_trabalho_1 = {
+    1: 'Executar Busca em Largura',
+    2: 'Executar Busca em Profundidade',
+    3: 'Voltar'
+}
 
-# print(list(DG.successors(1)))
-# print(DG.edges[1, 3]['weight'])
-# print(DG.edges[1, 2]['weight'])
+menu_trabalho_2 = {
+    1: 'Executar Busca Ordenada',
+    2: 'Executar Busca Gulosa',
+    3: 'Executar Busca A*',
+    4: 'Voltar'
+}
 
-# if __name__ == "__main__":
+def chamaBuscaLargura():
+    pass
 
-# print(DG.out_degree(1, weight='weight'))
+def chamaBuscaProfundidade():
+    pass
+
+def chamaBuscaOrdenada():
+    pass
+
+def chamaBuscaGulosa():
+    pass
+
+def chamaBuscaAEstela():
+    pass
+
+def print_menu(menuOpcoes):
+    for key in menuOpcoes.keys():
+        print (key, '--', menuOpcoes[key] )
+
+def menuTrabalho1():
+    while(True):
+        print("-"*10, "Menu Trabalho 1", "-"*10)
+        print_menu(menu_trabalho_1)
+        opcao = ''
+        try:
+            opcao = int(input('\nEscolha uma opcao: '))
+            print("")
+        except:
+            print('Entrada errada. Por favor, digite um numero ...')
+        if opcao == 1:
+            chamaBuscaLargura()
+        elif opcao == 2:
+            chamaBuscaProfundidade()
+        elif opcao == 3:
+            break
+        else:
+            print('Opcao invalida. Por favor, digite um numero entre 1 e 3.\n')
+
+def menuTrabalho2():
+    while(True):
+        print("-"*10, "Menu Trabalho 2", "-"*10)
+        print_menu(menu_trabalho_2)
+        opcao = ''
+        try:
+            opcao = int(input('\nEscolha uma opcao: '))
+            print("")
+        except:
+            print('Entrada errada. Por favor, digite um numero ...')
+        if opcao == 1:
+            chamaBuscaOrdenada()
+        elif opcao == 2:
+            chamaBuscaGulosa()
+        elif opcao == 3:
+            chamaBuscaAEstela()
+        elif opcao == 4:
+            break
+        else:
+            print('Opcao invalida. Por favor, digite um numero entre 1 e 4.\n')
+
+if __name__ == "__main__":
+    while(True):
+        print("-"*10, "Menu Principal", "-"*10)
+        print_menu(menu_opcoes)
+        opcao = ''
+        try:
+            opcao = int(input('\nEscolha uma opcao: '))
+            print("")
+        except:
+            print('Entrada errada. Por favor, digite um numero ...')
+        if opcao == 1:
+            menuTrabalho1()
+        elif opcao == 2:
+            menuTrabalho2()
+        elif opcao == 3:
+            exit()
+        else:
+            print('Opcao invalida. Por favor, digite um numero entre 1 e 3.\n')
 
 # subax1 = plt.subplot(121)
 # nx.draw_shell(DG, nlist=[range(0, 5), range(5, 11), range(11, 17), range(17, 23), range(23, 30), range(30, 37)], with_labels=True, font_weight='bold')
