@@ -543,21 +543,6 @@ def buscaAEstrela(DG, noInicial, noDestino, custosHeuristicas, custos):
 
 NO_INICIAL = 33
 
-# BUSCA ORDENADA
-custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 4, 3, 4, 4, 1, 2, 3, 2, 4, 5, 3, 3, 3, 1, 3, 6, 4, 4, 4, 3, 4, 5, 3, 0, 3, 2, 3]
-buscaOrdenada(DG, NO_INICIAL, 14, custos)
-
-# BUSCA GULOSA
-heuristicas = retornaHeuristica(DG, 14)
-buscaGulosa(DG, NO_INICIAL, 14, heuristicas)
-
-# BUSCA A*
-# custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 4, 3, 4, 4, 1, 2, 3, 2, 4, 5, 3, 3, 3, 1, 3, 6, 4, 4, 4, 3, 4, 5, 3, 0, 3, 2, 3]
-heuristicas = retornaHeuristica(DG, 14)
-custosHeuristicasZip = zip(custos, heuristicas)
-custosHeuristicas = [x + y for (x, y) in custosHeuristicasZip]
-buscaAEstrela(DG, NO_INICIAL, 14, custosHeuristicas, custos)
-
 menu_opcoes = {
     1: 'Trabalho 1: Busca em Largura / Busca em Profundidade',
     2: 'Trabalho 2: Busca Ordenada / Busca Gulosa / Busca A*',
@@ -579,22 +564,126 @@ menu_trabalho_2 = {
 
 def chamaBuscaLargura():
     # BUSCA LARGURA
-    estadoDestino = int(input("Digite um estado destino: "))
+    estadoDestino = int(input("Digite um estado destino (1, ..., 36): "))
     buscaLargura(DG, NO_INICIAL, estadoDestino)
 
 def chamaBuscaProfundidade():
     # BUSCA PROFUNDIDADE
-    estadoDestino = int(input("Digite um estado destino: "))
+    estadoDestino = int(input("Digite um estado destino (1, ..., 36): "))
     buscaProfundidade(DG, NO_INICIAL, estadoDestino)
 
 def chamaBuscaOrdenada():
-    pass
+    # BUSCA ORDENADA
+    custos = []
+    estadoDestino = 0
+    problemaDaBusca = int(input("Escolha um dos problemas da Torre de Londres (1, ..., 15): "))
+    if problemaDaBusca == 1:
+        custos = [6, 4, 3, 2, 1, 3, 6, 4, 4, 4, 3, 4, 6, 4, 4, 4, 2, 3, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 0, 3, 2, 1]
+        estadoDestino = 36
+    elif problemaDaBusca == 2:
+        custos = [6, 3, 4, 4, 2, 3, 6, 4, 4, 4, 2, 3, 6, 4, 4, 4, 3, 4, 6, 4, 3, 3, 2, 3, 5, 3, 2, 2, 0, 2, 5, 2, 0, 4, 3, 4]
+        estadoDestino = 29
+    elif problemaDaBusca == 3:
+        custos = [6, 4, 4, 4, 2, 3, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 6, 4, 3, 3, 2, 3, 4, 2, 1, 2, 1, 3, 5, 3, 0, 4, 3, 4]
+        estadoDestino = 27
+    elif problemaDaBusca == 4:
+        custos = [4, 2, 1, 2, 2, 3, 5, 3, 3, 3, 2, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 6, 4, 0, 3, 1, 3]
+        estadoDestino = 3
+    elif problemaDaBusca == 5:
+        custos = [4, 2, 1, 2, 2, 3, 5, 3, 3, 3, 2, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 6, 4, 0, 3, 1, 3]
+        estadoDestino = 3
+    elif problemaDaBusca == 6:
+        custos = [6, 4, 4, 3, 3, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 3, 2, 4, 5, 3, 2, 1, 1, 3, 6, 4, 3, 3, 2, 2, 6, 4, 0, 4, 3, 3]
+        estadoDestino = 22
+    elif problemaDaBusca == 7:
+        custos = [5, 3, 3, 3, 3, 4, 4, 1, 2, 3, 2, 4, 6, 3, 4, 4, 3, 4, 6, 4, 4, 4, 2, 3, 5, 3, 3, 4, 3, 4, 6, 4, 0, 3, 1, 4]
+        estadoDestino = 8
+    elif problemaDaBusca == 8:
+        custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 3, 3, 1, 1, 6, 4, 3, 2, 2, 3, 6, 4, 0, 3, 2, 4]
+        estadoDestino = 24
+    elif problemaDaBusca == 9:
+        custos = [3, 2, 2, 3, 3, 4, 5, 3, 3, 3, 2, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 5, 4, 0, 4, 2, 4]
+        estadoDestino = 1
+    elif problemaDaBusca == 10:
+        custos = [5, 3, 3, 3, 3, 4, 3, 2, 2, 3, 2, 3, 5, 4, 4, 4, 3, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 0, 4, 2, 4]
+        estadoDestino = 7
+    elif problemaDaBusca == 11:
+        custos = [5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 3, 2, 3, 4, 2, 1, 2, 1, 3, 6, 4, 3, 3, 2, 3, 6, 4, 0, 4, 3, 4]
+        estadoDestino = 21
+    elif problemaDaBusca == 12:
+        custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 4, 3, 4, 5, 2, 3, 3, 2, 4, 5, 3, 2, 2, 0, 2, 6, 4, 3, 3, 2, 3, 6, 4, 0, 3, 2, 4]
+        estadoDestino = 23
+    elif problemaDaBusca == 13:
+        custos = [6, 4, 4, 4, 1, 3, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 2, 3, 6, 3, 4, 4, 3, 4, 4, 1, 2, 3, 2, 4, 5, 3, 0, 4, 3, 3]
+        estadoDestino = 26
+    elif problemaDaBusca == 14:
+        custos = [5, 3, 3, 3, 3, 4, 4, 2, 1, 2, 1, 3, 6, 4, 3, 3, 2, 3, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 0, 4, 2, 4]
+        estadoDestino = 9
+    else:
+        custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 4, 3, 4, 4, 1, 2, 3, 2, 4, 5, 3, 3, 3, 1, 3, 6, 4, 4, 4, 3, 4, 5, 3, 0, 3, 2, 3]
+        estadoDestino = 14
+    buscaOrdenada(DG, NO_INICIAL, estadoDestino, custos)
 
 def chamaBuscaGulosa():
-    pass
+    # BUSCA GULOSA
+    estadoDestino = int(input("Digite um estado destino (1, ..., 36): "))
+    heuristicas = retornaHeuristica(DG, estadoDestino)
+    buscaGulosa(DG, NO_INICIAL, estadoDestino, heuristicas)
 
 def chamaBuscaAEstela():
-    pass
+    # BUSCA A*
+    custos = []
+    estadoDestino = 0
+    problemaDaBusca = int(input("Escolha um dos problemas da Torre de Londres (1, ..., 15): "))
+    if problemaDaBusca == 1:
+        custos = [6, 4, 3, 2, 1, 3, 6, 4, 4, 4, 3, 4, 6, 4, 4, 4, 2, 3, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 0, 3, 2, 1]
+        estadoDestino = 36
+    elif problemaDaBusca == 2:
+        custos = [6, 3, 4, 4, 2, 3, 6, 4, 4, 4, 2, 3, 6, 4, 4, 4, 3, 4, 6, 4, 3, 3, 2, 3, 5, 3, 2, 2, 0, 2, 5, 2, 0, 4, 3, 4]
+        estadoDestino = 29
+    elif problemaDaBusca == 3:
+        custos = [6, 4, 4, 4, 2, 3, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 6, 4, 3, 3, 2, 3, 4, 2, 1, 2, 1, 3, 5, 3, 0, 4, 3, 4]
+        estadoDestino = 27
+    elif problemaDaBusca == 4:
+        custos = [4, 2, 1, 2, 2, 3, 5, 3, 3, 3, 2, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 6, 4, 0, 3, 1, 3]
+        estadoDestino = 3
+    elif problemaDaBusca == 5:
+        custos = [4, 2, 1, 2, 2, 3, 5, 3, 3, 3, 2, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 6, 4, 0, 3, 1, 3]
+        estadoDestino = 3
+    elif problemaDaBusca == 6:
+        custos = [6, 4, 4, 3, 3, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 3, 2, 4, 5, 3, 2, 1, 1, 3, 6, 4, 3, 3, 2, 2, 6, 4, 0, 4, 3, 3]
+        estadoDestino = 22
+    elif problemaDaBusca == 7:
+        custos = [5, 3, 3, 3, 3, 4, 4, 1, 2, 3, 2, 4, 6, 3, 4, 4, 3, 4, 6, 4, 4, 4, 2, 3, 5, 3, 3, 4, 3, 4, 6, 4, 0, 3, 1, 4]
+        estadoDestino = 8
+    elif problemaDaBusca == 8:
+        custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 3, 3, 1, 1, 6, 4, 3, 2, 2, 3, 6, 4, 0, 3, 2, 4]
+        estadoDestino = 24
+    elif problemaDaBusca == 9:
+        custos = [3, 2, 2, 3, 3, 4, 5, 3, 3, 3, 2, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 5, 4, 0, 4, 2, 4]
+        estadoDestino = 1
+    elif problemaDaBusca == 10:
+        custos = [5, 3, 3, 3, 3, 4, 3, 2, 2, 3, 2, 3, 5, 4, 4, 4, 3, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 0, 4, 2, 4]
+        estadoDestino = 7
+    elif problemaDaBusca == 11:
+        custos = [5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 3, 4, 5, 3, 3, 3, 2, 3, 4, 2, 1, 2, 1, 3, 6, 4, 3, 3, 2, 3, 6, 4, 0, 4, 3, 4]
+        estadoDestino = 21
+    elif problemaDaBusca == 12:
+        custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 4, 3, 4, 5, 2, 3, 3, 2, 4, 5, 3, 2, 2, 0, 2, 6, 4, 3, 3, 2, 3, 6, 4, 0, 3, 2, 4]
+        estadoDestino = 23
+    elif problemaDaBusca == 13:
+        custos = [6, 4, 4, 4, 1, 3, 5, 3, 3, 4, 3, 4, 6, 4, 4, 4, 2, 3, 6, 3, 4, 4, 3, 4, 4, 1, 2, 3, 2, 4, 5, 3, 0, 4, 3, 3]
+        estadoDestino = 26
+    elif problemaDaBusca == 14:
+        custos = [5, 3, 3, 3, 3, 4, 4, 2, 1, 2, 1, 3, 6, 4, 3, 3, 2, 3, 6, 4, 4, 4, 3, 4, 5, 3, 3, 4, 3, 4, 6, 4, 0, 4, 2, 4]
+        estadoDestino = 9
+    else:
+        custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 4, 3, 4, 4, 1, 2, 3, 2, 4, 5, 3, 3, 3, 1, 3, 6, 4, 4, 4, 3, 4, 5, 3, 0, 3, 2, 3]
+        estadoDestino = 14
+    heuristicas = retornaHeuristica(DG, estadoDestino)
+    custosHeuristicasZip = zip(custos, heuristicas)
+    custosHeuristicas = [x + y for (x, y) in custosHeuristicasZip]
+    buscaAEstrela(DG, NO_INICIAL, estadoDestino, custosHeuristicas, custos)
 
 def print_menu(menuOpcoes):
     for key in menuOpcoes.keys():
