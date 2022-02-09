@@ -140,14 +140,17 @@ def printIteracao(estadoAtual, abertos, fechados, iteracao, fila = 0, solucao = 
     print("Fechados:", fechados, "\n")
 
 # Funcao para printar o caminho solucao
-def printCaminhoSolucao(caminhoSolucao):
+def printCaminhoSolucao(caminhoSolucao, i = 0):
     # Print dos estados
     print("Caminho Solucao:", end=" ")
     for estado in caminhoSolucao:
         if (estado == caminhoSolucao[len(caminhoSolucao)-1]):
-            print(estado, "\n")
+            print(estado)
         else:
             print(estado, end=" -> ")
+    print("Numero de movimentos do caminho solucao:", (len(caminhoSolucao)-1))
+    if i != 0:
+        print("Numero de iteracoes:", i, "\n")
 
 # Funcao que retorna o caminho solucao (raiz -> ... -> folha) dado a arvore de busca e o estado destino
 def retornaCaminhoSolucao(tree, estadoDestino):
@@ -188,6 +191,7 @@ def retornaSucessores(DG, no):
 
 # BUSCA EM LARGURA
 def buscaLargura(DG, noInicial, noDestino):
+    print("-----"*20)
     print("BUSCA EM LARGURA:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
     fila = []
     abertos = []
@@ -206,7 +210,7 @@ def buscaLargura(DG, noInicial, noDestino):
         # Sucesso
         if (estadoAtual == noDestino):
             printIteracao(estadoAtual, abertos, fechados, i, [], 1)
-            printCaminhoSolucao(retornaCaminhoSolucao(tree, estadoAtual))
+            printCaminhoSolucao(retornaCaminhoSolucao(tree, estadoAtual), i)
             tree.show()
             return estadoAtual, fechados, abertos, len(fechados), tree
         else:
@@ -231,6 +235,7 @@ def buscaLargura(DG, noInicial, noDestino):
 
 # BUSCA EM PROFUNDIDADE
 def buscaProfundidade(DG, noInicial, noDestino):
+    print("-----"*20)
     print("BUSCA EM PROFUNDIDADE:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
     abertos = []
     fechados = []
@@ -247,7 +252,7 @@ def buscaProfundidade(DG, noInicial, noDestino):
         # Sucesso
         if (estadoAtual == noDestino):
             printIteracao(estadoAtual, abertos, fechados, i, 0, 1)
-            printCaminhoSolucao(retornaCaminhoSolucao(tree, estadoAtual))
+            printCaminhoSolucao(retornaCaminhoSolucao(tree, estadoAtual), i)
             tree.show()
             return estadoAtual, fechados, abertos, len(fechados), tree
         else:
@@ -381,8 +386,15 @@ def retornaCustoDoCaminhoDeNos(tree, no, custos):
 
     return custoDoCaminho
 
+# Printa o custo real do caminho solucao para busca ordenada e A*
+def printCustoCaminhoSolucao(estadoSolucao):
+    a = estadoSolucao.split('(')
+    custoSolucao = int(a[1].replace(")", ""))
+    print("Custo do Caminho Solucao:", custoSolucao)
+
 # BUSCA ORDENADA
 def buscaOrdenada(DG, noInicial, noDestino, custos):
+    print("-----"*20)
     print("BUSCA ORDENADA:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
     abertos = []
     tree = Tree()
@@ -402,8 +414,10 @@ def buscaOrdenada(DG, noInicial, noDestino, custos):
         # Sucesso
         if (noAtual.no == noDestino):
             printIteracaoComListaDeNos(noAtual.no, nosAbertos, nosFechados, i, [], 1)
+            caminhoSolucaoDeNos = retornaCaminhoSolucaoDeNos(tree, noAtual)
+            printCustoCaminhoSolucao(caminhoSolucaoDeNos[len(caminhoSolucaoDeNos)-1])
+            printCaminhoSolucao(caminhoSolucaoDeNos, i)
             tree.show()
-            printCaminhoSolucao(retornaCaminhoSolucaoDeNos(tree, noAtual))
             return noAtual.no, nosFechados, nosAbertos, len(nosFechados), tree
         else:
             # Geracao dos filhos do estado atual
@@ -430,6 +444,7 @@ def buscaOrdenada(DG, noInicial, noDestino, custos):
 
 # BUSCA GULOSA
 def buscaGulosa(DG, noInicial, noDestino, heuristicas):
+    print("-----"*20)
     print("BUSCA GULOSA:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
     abertos = []
     tree = Tree()
@@ -439,6 +454,7 @@ def buscaGulosa(DG, noInicial, noDestino, heuristicas):
     nosAbertos = retornaListaDeNos(abertos, heuristicas)
     nosFechados = []
     nosFila = nosAbertos
+    heuristica = heuristicas[noInicial-1]
     i = 1
 
     # Enquanto existir vertices na lista de abertos
@@ -449,7 +465,8 @@ def buscaGulosa(DG, noInicial, noDestino, heuristicas):
         # Sucesso
         if (noAtual.no == noDestino):
             printIteracaoComListaDeNos(noAtual.no, nosAbertos, nosFechados, i, [], 1)
-            printCaminhoSolucao(retornaCaminhoSolucao(tree, noAtual.no))
+            print("Heuristica da Busca Gulosa:", heuristica)
+            printCaminhoSolucao(retornaCaminhoSolucao(tree, noAtual.no), i)
             tree.show()
             return noAtual.no, nosFechados, nosAbertos, len(nosFechados), tree
         else:
@@ -475,6 +492,7 @@ def buscaGulosa(DG, noInicial, noDestino, heuristicas):
     return False
 
 def buscaAEstrela(DG, noInicial, noDestino, custosHeuristicas, custos):
+    print("-----"*20)
     print("BUSCA A*:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
     abertos = []
     tree = Tree()
@@ -494,9 +512,10 @@ def buscaAEstrela(DG, noInicial, noDestino, custosHeuristicas, custos):
         # Sucesso
         if (noAtual.no == noDestino):
             printIteracaoComListaDeNos(noAtual.no, nosAbertos, nosFechados, i, [], 1)
-            # criar funcao print fim depois e tirar o noatual da abertos e colocar na fechados
+            caminhoSolucaoDeNos = retornaCaminhoSolucaoDeNos(tree, noAtual)
+            printCustoCaminhoSolucao(caminhoSolucaoDeNos[len(caminhoSolucaoDeNos)-1])
+            printCaminhoSolucao(caminhoSolucaoDeNos, i)
             tree.show()
-            printCaminhoSolucao(retornaCaminhoSolucaoDeNos(tree, noAtual))
             return noAtual.no, nosFechados, nosAbertos, len(nosFechados), tree
         else:
             # Geracao dos filhos do estado atual
@@ -525,25 +544,25 @@ def buscaAEstrela(DG, noInicial, noDestino, custosHeuristicas, custos):
 NO_INICIAL = 33
 
 # BUSCA LARGURA
-# buscaLargura(DG, NO_INICIAL, 14)
+buscaLargura(DG, NO_INICIAL, 14)
 
 # BUSCA PROFUNDIDADE
-# buscaProfundidade(DG, NO_INICIAL, 14)
+buscaProfundidade(DG, NO_INICIAL, 14)
 
 # BUSCA ORDENADA
-# custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 3, 3, 1, 1, 6, 4, 3, 2, 2, 3, 6, 4, 0, 3, 2, 4]
-# buscaOrdenada(DG, NO_INICIAL, 24, custos)
+custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 4, 3, 4, 4, 1, 2, 3, 2, 4, 5, 3, 3, 3, 1, 3, 6, 4, 4, 4, 3, 4, 5, 3, 0, 3, 2, 3]
+buscaOrdenada(DG, NO_INICIAL, 14, custos)
 
 # BUSCA GULOSA
-# heuristicas = retornaHeuristica(DG, 24)
-# buscaGulosa(DG, NO_INICIAL, 24, heuristicas)
+heuristicas = retornaHeuristica(DG, 14)
+buscaGulosa(DG, NO_INICIAL, 14, heuristicas)
 
 # BUSCA A*
-custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 3, 3, 1, 1, 6, 4, 3, 2, 2, 3, 6, 4, 0, 3, 2, 4]
-heuristicas = retornaHeuristica(DG, 24)
+# custos = [6, 4, 4, 4, 3, 4, 6, 3, 4, 4, 3, 4, 4, 1, 2, 3, 2, 4, 5, 3, 3, 3, 1, 3, 6, 4, 4, 4, 3, 4, 5, 3, 0, 3, 2, 3]
+heuristicas = retornaHeuristica(DG, 14)
 custosHeuristicasZip = zip(custos, heuristicas)
 custosHeuristicas = [x + y for (x, y) in custosHeuristicasZip]
-buscaAEstrela(DG, NO_INICIAL, 24, custosHeuristicas, custos)
+buscaAEstrela(DG, NO_INICIAL, 14, custosHeuristicas, custos)
 
 
 
