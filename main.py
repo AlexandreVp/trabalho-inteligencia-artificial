@@ -131,9 +131,9 @@ DG.add_weighted_edges_from([(36, 4, 5)])
 def printIteracao(estadoAtual, abertos, fechados, iteracao, fila = 0, solucao = 0):
     print("ITERACAO:", iteracao)
     if (solucao == 0):
-        print("Estado Atual:", estadoAtual)
+        print("Novo Estado Atual:", estadoAtual)
     else:
-        print("Estado Atual:", estadoAtual, "(Estado Objetivo e fim da busca)")
+        print("Novo Estado Atual:", estadoAtual, "(Estado Objetivo e fim da busca)")
     if (fila != 0):
         print("Fila:", fila)
     print("Abertos:", abertos)
@@ -326,9 +326,85 @@ def retornaEstadosFilhoValidosComListaDeNos(filhosDoEstadoAtual, listaDeNosFecha
 
     return filhosDoEstadoAtual
 
+# Funcao para atualizar o custo dos filhos (descendo o caminho da arvore de busca)
+def atualizaCustosDosFilhos(nosFila, custoDoPai):
+    for filho in nosFila:
+        filho.custo += custoDoPai
+
+# Funcao que gera como filhos do estado atual apenas estados validos com base no custo e lista de abertos (tecnica de poda)
+def tecnicaDePodaComRelacaoAoCustoDosFilhos(nosFila, listaDeNosAbertos):
+    for noEstado in listaDeNosAbertos:
+        for noFila in nosFila:
+            if noEstado.no == noFila.no and noFila.custo >= noEstado.custo:
+                nosFila.remove(noFila)
+
+# Funcao que insere na arvore os nos de filhos validos do estado atual da busca
+def insereNosFilhosNaArvore(tree, nosFila, estadoAtual):
+    for estado in nosFila:
+        tree.create_node("{}({})".format(estado.no, estado.custo), "{}({})".format(estado.no, estado.custo), "{}({})".format(estadoAtual.no, estadoAtual.custo))
+
+# Funcao que retorna o caminho solucao (raiz -> ... -> folha) dado a arvore de busca composta por nos e o no do estado destino
+def retornaCaminhoSolucaoDeNos(tree, noEstadoDestino):
+    indexDoCaminho = None
+    # Retorna uma lista contendo listas dos caminhos da arvore para cada no folha
+    caminhos = tree.paths_to_leaves()
+    # Passa por cada lista de caminhos e descobre o index da lista com o caminho solucao
+    for index in range(len(caminhos)):
+        caminho = caminhos[index]
+        if (caminho[len(caminho)-1] == "{}({})".format(noEstadoDestino.no, noEstadoDestino.custo)):
+            indexDoCaminho = index
+    # Atribuicao do caminho solucao
+    caminhoSolucao = caminhos[indexDoCaminho]
+    
+    return caminhoSolucao
+
 # BUSCA ORDENADA
-def buscaOrdenada(DG, noInicial, noDestino):
-    pass
+def buscaOrdenada(DG, noInicial, noDestino, custos):
+    print("BUSCA ORDENADA:", "Estado inicial:", noInicial, "/ Estado destino:", noDestino, "\n")
+    abertos = []
+    tree = Tree()
+    tree.create_node("{}({})".format(noInicial, 0), "{}({})".format(noInicial, 0))
+    # tree.create_node(noInicial, noInicial)
+    abertos.append(noInicial)
+    # Criando listas de nos: abertos, fechados, fila
+    nosAbertos = retornaListaDeNos(abertos, custos)
+    nosFechados = []
+    nosFila = nosAbertos
+    i = 1
+
+    # Enquanto existir vertices na lista de abertos
+    while(len(nosAbertos) != 0):
+        # Primeiro da fila de abertos como estado atual
+        noAtual = nosAbertos[0]
+
+        # Sucesso
+        if (noAtual.no == noDestino):
+            printIteracaoComListaDeNos(noAtual.no, nosAbertos, nosFechados, i, [], 1)
+            tree.show()
+            printCaminhoSolucao(retornaCaminhoSolucaoDeNos(tree, noAtual))
+            return noAtual.no, nosFechados, nosAbertos, len(nosFechados), tree
+        else:
+            # Geracao dos filhos do estado atual
+            filhosDoEstadoAtual, regrasDeTransicaoAplicadas = retornaSucessores(DG, noAtual.no)
+            filhosDoEstadoAtual = retornaEstadosFilhoValidosComListaDeNos(filhosDoEstadoAtual, nosFechados)
+            nosFilhosDoEstadoAtual = retornaListaDeNos(filhosDoEstadoAtual, custos)
+            # Atualiza fila
+            nosFila = nosFilhosDoEstadoAtual
+            atualizaCustosDosFilhos(nosFila, noAtual.custo)
+            tecnicaDePodaComRelacaoAoCustoDosFilhos(nosFila, nosAbertos)
+            # Print da iteracao: estado atual, fila de abertos, fila de fechados, iteracao, fila
+            printIteracaoComListaDeNos(noAtual.no, nosAbertos, nosFechados, i, nosFila)
+            # Insere os filhos validos do estado atual na arvore
+            insereNosFilhosNaArvore(tree, nosFila, noAtual)
+            # Retira-se estado atual da fila de abertos e coloca na lista de fechados
+            nosAbertos.pop(0)
+            nosFechados.append(noAtual)
+            # Atualiza fila de abertos com os filhos validos do estado atual
+            nosAbertos.extend(nosFila)
+            ordenaListaDeNos(nosAbertos)
+            i += 1
+
+    return False
 
 # BUSCA GULOSA
 def buscaGulosa(DG, noInicial, noDestino, heuristicas):
@@ -388,9 +464,12 @@ NO_INICIAL = 33
 # buscaProfundidade(DG, NO_INICIAL, 14)
 
 # BUSCA GULOSA
-heuristicas = retornaHeuristica(DG, 24)
-buscaGulosa(DG, NO_INICIAL, 24, heuristicas)
+# heuristicas = retornaHeuristica(DG, 24)
+# buscaGulosa(DG, NO_INICIAL, 24, heuristicas)
 
+# BUSCA ORDENADA
+custos = [6, 4, 3, 2, 1, 3, 6, 4, 4, 4, 3, 4, 6, 4, 4, 4, 2, 3, 6, 3, 4, 3, 3, 4, 6, 3, 4, 4, 3, 3, 6, 4, 0, 3, 2, 1]
+buscaOrdenada(DG, NO_INICIAL, 36, custos)
 
 
 
